@@ -1,4 +1,4 @@
-from flowshop_test.utils import *
+from evolved_func_test.utils import *
 
 from original import original_priority
 from evolved import evolved_priority, evolved_priority_2

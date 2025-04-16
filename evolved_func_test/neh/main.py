@@ -1,6 +1,6 @@
 import numpy as np
 
-from flowshop_test.utils import *
+from evolved_func_test.utils import *
 from original import neh
 from evolved import evolved_neh
 
