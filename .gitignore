@@ -1,0 +1,6 @@
+/logs
+/flowshop/logs
+/flowshop/logs_cl
+/.idea
+**__pycache__**
+/.DS_Store
