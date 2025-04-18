@@ -102,6 +102,7 @@ def main(
         config: config_lib.Config,
         max_sample_nums_per_stage: int | None,
         max_attempts_per_stage: int | None,
+        improvement_rate: float,
         class_config: config_lib.ClassConfig,
         **kwargs
 ):
@@ -115,6 +116,7 @@ def main(
         config:                         config file
         max_sample_nums_per_stage:      the maximum samples nums from LLM. 'None' refers to no stop
         max_attempts_per_stage:         the maximum attempts when score is lower than the baseline
+        improvement_rate:               the minimum improvement rate that should be achieved by evolved function
         class_config:                   class config file
         kwargs:                         other parameters
     """
@@ -148,6 +150,7 @@ def main(
             function_to_run,
             template,
             inputs[cur_stage_idx],
+            improvement_rate,
             **kwargs
         )
 

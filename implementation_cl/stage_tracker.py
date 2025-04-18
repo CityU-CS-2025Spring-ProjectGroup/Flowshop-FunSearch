@@ -38,6 +38,7 @@ class StageTracker:
             function_to_run: str,
             template: code_manipulation.Program,
             inputs: Dict,
+            improvement_rate: float,
             **kwargs
     ) -> tuple[bool, code_manipulation.Function]:
         """
@@ -50,6 +51,7 @@ class StageTracker:
             function_to_run:        the name the run function
             template:               the specification
             inputs:                 input data for evaluation
+            improvement_rate:       the minimum improvement rate that should be achieved by evolved function
 
         Returns:
             a tuple contains whether current run has passed
@@ -115,4 +117,4 @@ class StageTracker:
         best_score = profiler.get_cur_best_score()
         best_func = profiler.get_cur_best_function()
 
-        return best_score >= baseline_score, best_func
+        return best_score >= baseline_score * (1 + improvement_rate), best_func

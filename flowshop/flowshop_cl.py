@@ -21,6 +21,7 @@ add_prompt = base_prompt
 
 max_attempts = 5
 max_sample_num_per_stage = 10
+improvement_rate = 0.2
 
 def _eval_metric(baseline: dict, result: dict) -> bool:
     baseline_avg = sum(baseline.values()) / len(baseline)
@@ -247,6 +248,7 @@ if __name__ == '__main__':
         config=config,
         max_sample_nums_per_stage=max_sample_num_per_stage,
         max_attempts_per_stage=max_attempts,
+        improvement_rate=improvement_rate,
         class_config=class_config,
         verbose=True,
         log_dir=f'./logs_cl/evaluator_log/{spec_file.split('.')[0]}'
