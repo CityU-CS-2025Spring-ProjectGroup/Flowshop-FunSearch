@@ -66,55 +66,21 @@ def evaluate(instances: dict) -> float:
 
 @funsearch.evolve
 def calc_priority(job: np.ndarray) -> float:
-    priority = 0
-    total_time = sum(job)
     first_machine_time = job[0]
-    last_machine_time = job[-1]
-    num_stages = len(job)
 
-    # New Weights
-    w1, w2, w3, w4, w5, w6 = 0.35, 0.2, 0.2, 0.15, 0.05, 0.05
+    # Total processing time (smaller is better)
+    total_time = sum(job)
 
-    # Factor 1: First machine processing time
-    priority += w1 * (first_machine_time ** 1.2)
+    # Calculate priority score (using negative values since we're sorting in reverse)
+    # We can adjust weights of these factors based on problem characteristics
+    w1 = 0.7  # Weight for first machine time
+    w2 = 0.3  # Weight for total processing time
 
-    # Factor 2: Total job processing time
-    total_time_efficiency = total_time / max(job)
-    priority += w2 * total_time_efficiency
+    # Calculate a composite priority value
+    # Higher priority means this job should be processed earlier
+    # Since we're using reverse=True in sorting, we negate these values
+    # so that smaller processing times get higher priority
+    priority = -(w1 * first_machine_time + w2 * total_time)
 
-    # Factor 3: Utilization of stages
-    utilization = sum([min(job) / stage_time for stage_time in job]) / num_stages
-    priority += w3 * utilization
-
-    # Factor 4: Variance between stages
-    variance = np.var(job)
-    priority += w4 * (1 / (variance + 1))  # More stable is better
-
-    # Factor 5: First and Last machine time ratio
-    if first_machine_time < last_machine_time:
-        priority += w5 * (last_machine_time - first_machine_time)
-
-    # Factor 6: Dynamic gaps calculation
-    large_gap_penalty = 0
-    gaps = [(job[i], abs(job[i] - job[i - 1])) for i in range(1, num_stages)]
-    for stage, gap in gaps:
-        if gap > np.median(job):
-            large_gap_penalty += gap / stage
-    priority -= w6 * large_gap_penalty
-
-    # Further dynamic adjustment based on variance and extreme values
-    extreme_count = sum(1 for time in job if time > 1.2 * total_time_efficiency)
-    if extreme_count > num_stages / 3:
-        priority *= 0.9  # Penalize with more extreme times
-
-    for i in range(num_stages):
-        stage_importance = i / num_stages
-        if job[i] > total_time / num_stages:
-            priority += stage_importance * 0.03 * job[i]  # Prioritize key stages more if above average
-
-    # Introduce randomness for tie-breaking
-    np.random.seed(int(total_time * 100) + 42)
-    priority += np.random.normal(0, 0.7)
-
-    return -priority
+    return priority
 

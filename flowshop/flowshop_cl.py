@@ -19,7 +19,7 @@ model_name = 'chatgpt-4o-latest'
 spec_file = 'flowshop_spec_priority.py'
 add_prompt = base_prompt
 
-max_attempts = 5
+max_attempts = [3, 5, 7]
 max_sample_num_per_stage = 10
 improvement_rate = 0.2
 
@@ -200,7 +200,7 @@ class Sandbox(evaluator.Sandbox):
             result_queue.put((None, False))
 
 
-from flowshop_test.utils import load_datasets
+from evolved_func_test.utils import load_datasets
 
 from implementation_cl import funsearch
 from implementation_cl import config
@@ -251,5 +251,5 @@ if __name__ == '__main__':
         improvement_rate=improvement_rate,
         class_config=class_config,
         verbose=True,
-        log_dir=f'./logs_cl/evaluator_log/{spec_file.split('.')[0]}'
+        log_dir=f"./logs_cl/evaluator_log/{spec_file.split('.')[0]}"
     )

@@ -101,7 +101,7 @@ def main(
         inputs: Sequence[Any],
         config: config_lib.Config,
         max_sample_nums_per_stage: int | None,
-        max_attempts_per_stage: int | None,
+        max_attempts_per_stage: int | list | None,
         improvement_rate: float,
         class_config: config_lib.ClassConfig,
         **kwargs
@@ -120,6 +120,15 @@ def main(
         class_config:                   class config file
         kwargs:                         other parameters
     """
+
+    if isinstance(max_attempts_per_stage, list):
+        if len(max_attempts_per_stage) != len(inputs):
+            raise ValueError("Length of max_attempts_per_stage list must match the number of Stages.")
+    elif isinstance(max_attempts_per_stage, int):
+        max_attempts_per_stage = [max_attempts_per_stage for _ in range(len(inputs))]
+
+    print(max_attempts_per_stage)
+
     spec_file_path = _file_backup(spec_file_path)  # CGY: backup before changing
 
     cur_stage_idx = 0
@@ -167,7 +176,7 @@ def main(
             )
         else:
             cur_iter += 1
-            if cur_iter >= max_attempts_per_stage:
+            if cur_iter >= max_attempts_per_stage[cur_stage_idx]:
                 print(f"Reached max attempt limit, stop evolving......")
                 break
 
